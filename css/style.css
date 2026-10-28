@@ -1,0 +1,643 @@
+/* =====================================================================
+ *  Página inicial: escolha entre o fliperama e o metrô.
+ *  A tela é dividida na diagonal; a costura (--x) anda para o lado
+ *  que está em foco.
+ * ===================================================================== */
+
+@property --x {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+
+:root {
+  /* Fliperama (mesmas cores de /portfolio-arcade/) */
+  --arc-bg: #0b0620;
+  --arc-deep: #05030d;
+  --arc-ink: #f3ecff;
+  --arc-dim: #a397c9;
+  --pink: #ff2e97;
+  --cyan: #22e6ff;
+  --yellow: #ffe14d;
+  --green: #39ff7a;
+
+  /* Metrô (mesmas cores de /portfolio-metro/) */
+  --map-ground: #fbfcfe;
+  --map-sunk: #edf1f7;
+  --map-rule: #d3dbe7;
+  --map-ink: #14213d;
+  --map-ink-2: #47557a;
+  --river: #d5e8f5;
+  --line-blue: #1d5fbf;
+  --line-green: #00804f;
+
+  --font-intro: 'Archivo', system-ui, sans-serif;
+  --font-pixel: 'Press Start 2P', ui-monospace, monospace;
+  --font-crt: 'VT323', ui-monospace, monospace;
+  --font-sign: 'Roboto Condensed', 'Arial Narrow', sans-serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--arc-bg);
+  color: var(--arc-ink);
+  font-family: var(--font-intro);
+}
+
+/* ---------- Palco ---------- */
+
+.stage {
+  --x: 50%;
+  --s: 6%;   /* metade da inclinação da diagonal */
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  transition: --x 0.7s var(--ease-out);
+}
+
+.stage[data-active='arcade'] { --x: 54%; }
+.stage[data-active='metro'] { --x: 46%; }
+
+/* ---------- Nome e rodapé: invertem a cor sobre cada metade ---------- */
+
+.intro,
+.foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  color: #fff;
+  mix-blend-mode: difference;
+  text-align: center;
+  pointer-events: none;
+}
+
+.intro {
+  top: 0;
+  padding: clamp(28px, 6vh, 64px) 24px 0;
+}
+
+.intro__name {
+  margin: 0;
+  font-size: clamp(2.6rem, 6.4vw, 5.6rem);
+  font-weight: 800;
+  font-stretch: 118%;
+  font-variation-settings: 'wdth' 118;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+
+.intro__line {
+  max-width: 42rem;
+  text-wrap: balance;
+  margin: 0.9em auto 0;
+  font-size: clamp(1rem, 1.25vw, 1.15rem);
+  font-stretch: 100%;
+  line-height: 1.45;
+}
+
+.foot {
+  bottom: 0;
+  padding: 0 24px 22px;
+  font-size: 0.9rem;
+}
+
+.foot__hint {
+  margin: 0 0 10px;
+  opacity: 0.8;
+}
+
+.foot__hint kbd {
+  display: inline-block;
+  min-width: 1.8em;
+  padding: 0.1em 0.4em;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 0.85em;
+}
+
+.foot__links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foot__links li[hidden] { display: none; }
+
+.foot__links a {
+  color: inherit;
+  font-weight: 600;
+  text-underline-offset: 3px;
+  pointer-events: auto;
+}
+
+.foot__links a:hover { text-decoration-thickness: 2px; }
+
+.foot__links a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ---------- As duas metades ---------- */
+
+.modes {
+  position: absolute;
+  inset: 0;
+}
+
+.mode {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: center;
+  padding: max(22vh, 170px) 5vw 56px;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.mode--arcade {
+  justify-items: start;
+  background:
+    radial-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1.5px) 0 0 / 10px 10px,
+    radial-gradient(ellipse 70% 60% at 25% 55%, #1a0d40 0%, transparent 70%),
+    var(--arc-bg);
+  clip-path: polygon(0 0, calc(var(--x) + var(--s)) 0, calc(var(--x) - var(--s)) 100%, 0 100%);
+}
+
+.mode--metro {
+  justify-items: end;
+  color: var(--map-ink);
+  background:
+    linear-gradient(var(--map-sunk) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, var(--map-sunk) 1px, transparent 1px) 0 0 / 48px 48px,
+    var(--map-ground);
+  clip-path: polygon(calc(var(--x) + var(--s)) 0, 100% 0, 100% 100%, calc(var(--x) - var(--s)) 100%);
+}
+
+.mode__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  width: min(34vw, 440px, calc((100svh - 480px) * 1.6));
+  min-width: 280px;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+.mode--metro .mode__content { align-items: flex-end; text-align: right; }
+
+.stage[data-active='metro'] .mode--arcade .mode__content,
+.stage[data-active='arcade'] .mode--metro .mode__content {
+  opacity: 0.55;
+  filter: saturate(0.5);
+}
+
+.mode__title,
+.mode__text,
+.mode__cta { display: block; }
+
+.mode__text {
+  max-width: 30ch;
+}
+
+/* ---------- Fliperama: textos ---------- */
+
+.mode--arcade .mode__title {
+  margin-top: 10px;
+  font-family: var(--font-pixel);
+  font-size: clamp(1.3rem, 2.1vw, 1.8rem);
+  color: var(--pink);
+  text-shadow: 0 0 12px rgb(255 46 151 / 0.6), 3px 3px 0 var(--arc-deep);
+}
+
+.mode--arcade .mode__text {
+  font-family: var(--font-crt);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--arc-dim);
+}
+
+.mode--arcade .mode__cta {
+  margin-top: 6px;
+  padding: 14px 18px 12px;
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--arc-deep);
+  background: var(--yellow);
+  box-shadow: 4px 4px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.stage[data-active='arcade'] .mode--arcade .mode__cta {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--pink);
+}
+
+.mode--arcade:focus-visible .mode__cta {
+  outline: 3px solid var(--cyan);
+  outline-offset: 6px;
+}
+
+/* ---------- Fliperama: tela CRT ---------- */
+
+.crt {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  padding: 12px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #2a1650, var(--arc-deep) 60%);
+  box-shadow:
+    0 0 0 2px #3a2170,
+    0 0 26px -4px rgb(255 46 151 / 0.35);
+  transition: box-shadow 0.4s ease;
+}
+
+.stage[data-active='arcade'] .crt {
+  box-shadow:
+    0 0 0 2px var(--pink),
+    0 0 44px -2px rgb(255 46 151 / 0.6);
+}
+
+.crt__screen {
+  position: relative;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 14px / 18px;
+  background: radial-gradient(ellipse at 50% 45%, #1d1048 0%, var(--arc-bg) 65%, var(--arc-deep) 100%);
+  filter: brightness(0.78) saturate(0.85);
+  transition: filter 0.3s ease;
+}
+
+.stage[data-active='arcade'] .crt__screen {
+  filter: brightness(1.08) saturate(1.1);
+  animation: crt-flicker 3.2s steps(1) infinite;
+}
+
+.crt__stars {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(#fff 1px, transparent 1.6px) 0 0 / 46px 38px,
+    radial-gradient(var(--cyan) 1px, transparent 1.6px) 23px 19px / 70px 52px;
+  opacity: 0.55;
+  animation: scroll-x 9s linear infinite paused;
+}
+
+.crt__hud {
+  position: absolute;
+  top: 9%;
+  left: 6%;
+  right: 6%;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-pixel);
+  font-size: clamp(7px, 0.7vw, 10px);
+}
+
+.crt__p1 { color: var(--cyan); }
+.crt__p1 b { font-weight: inherit; color: var(--arc-ink); }
+.crt__hi { color: var(--yellow); }
+
+.crt__msg {
+  position: absolute;
+  top: 34%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 1.1vw, 15px);
+}
+
+.crt__msg-idle {
+  color: var(--yellow);
+  animation: blink 1.6s steps(1) infinite;
+}
+
+.crt__msg-live {
+  display: none;
+  color: var(--pink);
+  text-shadow: 0 0 10px rgb(255 46 151 / 0.8);
+  animation: blink 0.6s steps(1) infinite;
+}
+
+.stage[data-active='arcade'] .crt__msg-idle { display: none; }
+.stage[data-active='arcade'] .crt__msg-live { display: inline; }
+
+.crt__ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 17%;
+  border-top: 3px solid var(--green);
+  background:
+    repeating-linear-gradient(90deg, #12603a 0 12px, #0b3a24 12px 24px) 0 0 / 24px 6px repeat-x,
+    linear-gradient(#0b3a24, var(--arc-deep));
+  box-shadow: 0 -2px 12px rgb(57 255 122 / 0.35);
+  animation: scroll-x-fast 0.9s linear infinite paused;
+}
+
+.crt__coins {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 29%;
+  height: 10px;
+  background: linear-gradient(90deg, var(--yellow) 0 10px, transparent 10px 130px) 0 0 / 130px 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  animation: scroll-x-coins 2s linear infinite paused;
+}
+
+.crt__hero {
+  position: absolute;
+  left: 18%;
+  bottom: 17%;
+  width: 12%;
+  aspect-ratio: 12 / 11;
+}
+
+.crt__hero svg { display: block; width: 100%; height: 100%; }
+.hero__body,
+.hero__legs { fill: var(--cyan); }
+.hero__eye { fill: var(--arc-deep); }
+.hero__legs--1 { visibility: hidden; }
+
+.crt__fx {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 0.28) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.6) 100%);
+  pointer-events: none;
+}
+
+/* Lado ativo: o jogo começa */
+.stage[data-active='arcade'] :is(.crt__stars, .crt__ground, .crt__coins) {
+  animation-play-state: running;
+}
+.stage[data-active='arcade'] .crt__coins { opacity: 1; }
+.stage[data-active='arcade'] .hero__legs--0 { animation: frame-a 0.3s steps(1) infinite; }
+.stage[data-active='arcade'] .hero__legs--1 { animation: frame-b 0.3s steps(1) infinite; }
+.stage[data-active='arcade'] .crt__hero { animation: hop 0.3s steps(2) infinite; }
+
+/* ---------- Metrô: textos ---------- */
+
+.mode--metro .mode__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 8px 16px 8px 12px;
+  border-radius: 6px;
+  font-family: var(--font-sign);
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  background: var(--map-ink);
+}
+
+.mode__bullet {
+  width: 0.72em;
+  height: 0.72em;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: var(--line-blue);
+}
+
+.mode--metro .mode__text {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--map-ink-2);
+}
+
+.mode--metro .mode__cta {
+  margin-top: 6px;
+  padding: 13px 20px;
+  border-radius: 6px;
+  font-family: var(--font-sign);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--line-blue);
+  box-shadow: 0 2px 0 #123f80;
+  transition: background-color 0.2s;
+}
+
+.stage[data-active='metro'] .mode--metro .mode__cta { background: #174f9f; }
+
+.mode--metro:focus-visible .mode__cta {
+  outline: 3px solid var(--map-ink);
+  outline-offset: 5px;
+}
+
+/* ---------- Metrô: mapa ---------- */
+
+.map {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--map-rule);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 14px 34px -18px rgb(20 33 61 / 0.35);
+  overflow: hidden;
+}
+
+.map__svg { display: block; width: 100%; height: 100%; }
+
+.map__river {
+  fill: none;
+  stroke: var(--river);
+  stroke-width: 18;
+}
+
+.map__line {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke-width 0.3s ease;
+}
+
+.map__line--blue { stroke: var(--line-blue); }
+.map__line--green { stroke: var(--line-green); opacity: 0.85; }
+
+.stage[data-active='metro'] .map__line--blue { stroke-width: 10; }
+
+.map__stop {
+  fill: #fff;
+  stroke: var(--map-ink);
+  stroke-width: 3;
+}
+
+.map__stop--hub { stroke-width: 4; }
+
+.map__label {
+  font-family: var(--font-sign);
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--map-ink);
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 4px;
+}
+
+.map__train rect:first-child {
+  fill: #fff;
+  stroke: var(--map-ink);
+  stroke-width: 2.5;
+}
+
+.map__window { fill: var(--line-blue); }
+
+/* ---------- Costura entre as metades ---------- */
+
+.seam {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Faixa paralela à diagonal, entre --a e --b px a partir da costura. */
+.seam__glow i,
+.seam__neon,
+.seam__rail {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(
+    calc(var(--x) + var(--s) + var(--a)) 0,
+    calc(var(--x) + var(--s) + var(--b)) 0,
+    calc(var(--x) - var(--s) + var(--b)) 100%,
+    calc(var(--x) - var(--s) + var(--a)) 100%
+  );
+}
+
+.seam__glow {
+  position: absolute;
+  inset: 0;
+  filter: blur(10px);
+}
+
+.seam__glow i { --a: -14px; --b: 0px; background: var(--pink); opacity: 0.55; }
+.seam__neon { --a: -3px; --b: 0px; background: var(--cyan); }
+.seam__rail { --a: 0px; --b: 6px; background: var(--map-ink); }
+
+/* ---------- Animações ---------- */
+
+@keyframes scroll-x { to { background-position: -46px 0, -47px 19px; } }
+@keyframes scroll-x-fast { to { background-position: -24px 0, 0 0; } }
+@keyframes scroll-x-coins { to { background-position: -130px 0; } }
+@keyframes blink { 50% { visibility: hidden; } }
+@keyframes frame-a { 50% { visibility: hidden; } }
+@keyframes frame-b { 0% { visibility: hidden; } 50% { visibility: visible; } }
+@keyframes hop { 50% { transform: translateY(-6%); } }
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 0.93; }
+  94% { opacity: 1; }
+}
+
+/* ---------- Telas menores: as metades ficam empilhadas ---------- */
+
+@media (max-width: 820px), (max-height: 560px) {
+  .stage {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .intro,
+  .foot {
+    position: static;
+    mix-blend-mode: normal;
+  }
+
+  .intro {
+    padding: 44px 20px 8px;
+    color: var(--arc-ink);
+    background: var(--arc-bg);
+  }
+
+  .foot {
+    padding: 20px 16px 28px;
+    color: var(--map-ink);
+    background: var(--map-ground);
+  }
+
+  .foot__hint { display: none; }
+
+  .modes { position: static; }
+
+  .mode {
+    position: relative;
+    inset: auto;
+    padding: 28px 16px 64px;
+  }
+
+  .mode--arcade {
+    justify-items: center;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 44px), 0 100%);
+  }
+
+  .mode--metro {
+    justify-items: center;
+    margin-top: -44px;
+    padding: 72px 16px 32px;
+    clip-path: polygon(0 44px, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .mode__content,
+  .mode--metro .mode__content {
+    width: min(100%, 440px);
+    min-width: 0;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .mode--metro .mode__title { align-self: flex-start; }
+
+  .mode__cta { text-align: center; }
+
+  .seam { display: none; }
+
+  /* Sem mouse, os dois lados ficam acesos. */
+  .stage .mode__content { opacity: 1 !important; filter: none !important; }
+}
+
+/* ---------- Movimento reduzido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .stage { transition: none; }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* A tela muda de estado, mas sem nada se mexer. */
+  .stage[data-active='arcade'] .crt__coins { opacity: 0; }
+}

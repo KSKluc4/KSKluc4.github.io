@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lucas Marques | Portfólio</title>
+  <meta name="description" content="Portfólio de Lucas Marques. Escolha como ver os projetos: num fliperama retrô ou num mapa de metrô.">
+  <meta name="theme-color" content="#0b0620">
+  <link rel="canonical" href="https://kskluc4.github.io/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Compartilhamento (LinkedIn, WhatsApp, etc.) -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Lucas Marques">
+  <meta property="og:url" content="https://kskluc4.github.io/">
+  <meta property="og:title" content="Lucas Marques | Portfólio">
+  <meta property="og:description" content="Os mesmos projetos, dois jeitos de explorar: no fliperama ou no metrô.">
+  <meta property="og:image" content="https://kskluc4.github.io/assets/og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Tela dividida na diagonal: à esquerda um fliperama neon, à direita um mapa de metrô, com o nome Lucas Marques no meio.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Press+Start+2P&family=Roboto+Condensed:wght@600;800&family=VT323&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <main class="stage" id="stage">
+    <header class="intro">
+      <h1 class="intro__name">Lucas Marques</h1>
+      <p class="intro__line" data-config="about">Desenvolvo sistemas web e apps. Os mesmos projetos, dois jeitos de ver.</p>
+    </header>
+
+    <nav class="modes" aria-label="Escolha como ver os projetos">
+      <a class="mode mode--arcade" data-mode="arcade" href="https://kskluc4.github.io/portfolio-arcade/">
+        <span class="mode__content">
+          <span class="crt" aria-hidden="true">
+            <span class="crt__screen">
+              <span class="crt__stars"></span>
+              <span class="crt__hud">
+                <span class="crt__p1">P1 <b data-score>0000</b></span>
+                <span class="crt__hi">HI 2026</span>
+              </span>
+              <span class="crt__msg">
+                <span class="crt__msg-idle">INSERT COIN</span>
+                <span class="crt__msg-live">PRESS START</span>
+              </span>
+              <span class="crt__coins"></span>
+              <span class="crt__hero" data-sprite="hero"></span>
+              <span class="crt__ground"></span>
+              <span class="crt__fx"></span>
+            </span>
+          </span>
+          <span class="mode__title">Fliperama</span>
+          <span class="mode__text">Cada projeto é um cartucho. Escolha um, coloque na máquina e veja rodar.</span>
+          <span class="mode__cta">Entrar no fliperama</span>
+        </span>
+      </a>
+
+      <a class="mode mode--metro" data-mode="metro" href="https://kskluc4.github.io/portfolio-metro/">
+        <span class="mode__content">
+          <span class="map" aria-hidden="true">
+            <svg class="map__svg" viewBox="0 0 400 250" role="presentation">
+              <path class="map__river" d="M-10 222 C 90 196, 170 246, 410 206" />
+              <path class="map__line map__line--green" d="M260 30 V232" />
+              <path class="map__line map__line--blue" id="line-blue" d="M30 175 H150 L215 110 H370" />
+
+              <circle class="map__stop" cx="260" cy="50" r="6" />
+              <circle class="map__stop" cx="30" cy="175" r="6" />
+              <circle class="map__stop" cx="100" cy="175" r="6" />
+              <circle class="map__stop" cx="370" cy="110" r="6" />
+              <circle class="map__stop map__stop--hub" cx="260" cy="110" r="9" />
+
+              <text class="map__label" x="270" y="54">CodePath</text>
+              <text class="map__label" x="22" y="200">Pilates</text>
+              <text class="map__label" x="100" y="200" text-anchor="middle">Mon Petit</text>
+              <text class="map__label" x="272" y="96">Centro</text>
+              <text class="map__label" x="378" y="92" text-anchor="end">FiveM</text>
+
+              <g class="map__train">
+                <rect x="-15" y="-7" width="30" height="14" rx="5" />
+                <rect class="map__window" x="-10" y="-3" width="5" height="6" rx="1" />
+                <rect class="map__window" x="-2.5" y="-3" width="5" height="6" rx="1" />
+                <rect class="map__window" x="5" y="-3" width="5" height="6" rx="1" />
+                <animateMotion dur="10s" repeatCount="indefinite" rotate="auto" calcMode="linear"
+                  keyPoints="0;0;.191;.191;.7;.7;1;1;.7;.7;.191;.191;0"
+                  keyTimes="0;.052;.118;.169;.345;.397;.5;.552;.655;.707;.882;.934;1">
+                  <mpath href="#line-blue" />
+                </animateMotion>
+              </g>
+            </svg>
+          </span>
+          <span class="mode__title"><i class="mode__bullet"></i>Metrô</span>
+          <span class="mode__text">Cada linguagem é uma linha e cada projeto, uma estação. Siga o mapa.</span>
+          <span class="mode__cta">Entrar no metrô</span>
+        </span>
+      </a>
+
+      <span class="seam" aria-hidden="true">
+        <span class="seam__glow"><i></i></span>
+        <i class="seam__neon"></i>
+        <i class="seam__rail"></i>
+      </span>
+    </nav>
+
+    <footer class="foot">
+      <p class="foot__hint">Use <kbd>←</kbd> e <kbd>→</kbd> para escolher e <kbd>Enter</kbd> para entrar</p>
+      <ul class="foot__links">
+        <li><a href="https://github.com/KSKluc4">GitHub</a></li>
+        <li data-config="linkedin" hidden><a href="">LinkedIn</a></li>
+      </ul>
+    </footer>
+  </main>
+</body>
+</html>
